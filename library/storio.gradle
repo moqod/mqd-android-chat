@@ -1,0 +1,4 @@
+def storioVersion = '1.10.0'
+compile "com.pushtorefresh.storio:sqlite:$storioVersion"
+compile "com.pushtorefresh.storio:sqlite-annotations:$storioVersion"
+apt "com.pushtorefresh.storio:sqlite-annotations-processor:$storioVersion"

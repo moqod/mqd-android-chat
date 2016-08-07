@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    mavenCentral()
+    maven {url "https://jitpack.io"}
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+
+    apply from: "xmpp.gradle", to: dependencies
+    apply from: "rx.gradle", to: dependencies
+    apply from: "dagger.gradle", to: dependencies
+    apply from: "storio.gradle", to: dependencies
+
+    compile "com.google.code.gson:gson:2.4"
+}
