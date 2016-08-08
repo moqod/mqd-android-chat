@@ -1,9 +1,13 @@
 package com.moqod.android.chat.di;
 
+import android.content.Context;
 import com.moqod.android.chat.data.xmpp.XMPPService;
+import com.moqod.android.chat.di.modules.ApplicationModule;
 import com.moqod.android.chat.di.modules.DbModule;
 import com.moqod.android.chat.di.modules.DomainModule;
-import dagger.Subcomponent;
+import com.moqod.android.chat.domain.chats.ChatsRepository;
+import com.moqod.android.chat.domain.messages.MessagesRepository;
+import dagger.Component;
 
 import javax.inject.Singleton;
 
@@ -14,9 +18,12 @@ import javax.inject.Singleton;
  * Time: 23:32
  */
 @Singleton
-@Subcomponent(modules = {DbModule.class, DomainModule.class})
+@Component(modules = {DbModule.class, DomainModule.class, ApplicationModule.class})
 public interface ChatSingletonComponent {
 
     void inject(XMPPService xmppService);
+    Context context();
+    MessagesRepository messagesRepository();
+    ChatsRepository chatsRepository();
 
 }

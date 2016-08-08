@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.moqod.android.chat.sample.chatroom.MessageViewModel" />
+
+        <variable
+            name="eventListener"
+            type="com.moqod.android.chat.sample.chatroom.ChatRoomContract.EventListener" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="@{() -> eventListener.onResendMessage(model)}"
+            android:src="@drawable/ic_remove_circle"
+            android:visibility="invisible"
+            bind:visibility="@{model.error ? View.VISIBLE : View.INVISIBLE}" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/bg_chat_message"
+            android:minWidth="140dp"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5sp"
+                android:text="@{model.body}"
+                android:textColor="@color/white"
+                bind:visibility="@{model.hasBody ? View.VISIBLE : View.GONE}"
+                tools:text="Меня сложно найти, легко потерять и невозможно забыть." />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:maxLines="1"
+                android:text="@{model.date}"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                tools:ignore="SmallSp"
+                tools:text="15:48" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

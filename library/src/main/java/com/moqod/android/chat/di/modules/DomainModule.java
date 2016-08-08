@@ -1,6 +1,8 @@
 package com.moqod.android.chat.di.modules;
 
+import com.moqod.android.chat.data.chats.LocalChatsRepository;
 import com.moqod.android.chat.data.messages.LocalMessagesRepository;
+import com.moqod.android.chat.domain.chats.ChatsRepository;
 import com.moqod.android.chat.domain.messages.MessagesRepository;
 import dagger.Module;
 import dagger.Provides;
@@ -19,6 +21,12 @@ public class DomainModule {
     @Provides
     @Singleton
     public MessagesRepository provideMessagesRepository(LocalMessagesRepository repository) {
+        return repository;
+    }
+
+    @Provides
+    @Singleton
+    public ChatsRepository provideChatsRepository(LocalChatsRepository repository) {
         return repository;
     }
 

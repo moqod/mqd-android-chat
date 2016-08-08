@@ -1,7 +1,6 @@
 package com.moqod.android.chat.domain.chats;
 
 import android.support.annotation.NonNull;
-import com.moqod.android.chat.data.chats.LocalChatsRepository;
 import com.moqod.android.chat.data.chats.criteria.ChatByIdCriteria;
 import com.moqod.android.chat.data.messages.critearia.MessageStateCriteria;
 import com.moqod.android.chat.data.messages.critearia.MessagesOffsetCriteria;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public class ChatRoomInteractor {
 
-    private LocalChatsRepository mLocalChatsRepository;
+    private ChatsRepository mLocalChatsRepository;
     private MessagesRepository mMessagesRepository;
 
     private PublishSubject<Object> mNotificationSubject = PublishSubject.create();
@@ -36,7 +35,7 @@ public class ChatRoomInteractor {
     private Subject<ChatModel, ChatModel> mInitSubject = new SerializedSubject<>(PublishSubject.create());
 
     @Inject
-    public ChatRoomInteractor(LocalChatsRepository localChatsRepository, MessagesRepository messagesRepository) {
+    public ChatRoomInteractor(ChatsRepository localChatsRepository, MessagesRepository messagesRepository) {
         mLocalChatsRepository = localChatsRepository;
         mMessagesRepository = messagesRepository;
     }
