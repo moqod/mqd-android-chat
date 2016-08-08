@@ -1,4 +1,4 @@
-package com.moqod.android.chat.sample.common;
+package injection;
 
 import javax.inject.Scope;
 import java.lang.annotation.Retention;

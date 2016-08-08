@@ -99,7 +99,6 @@ public class RxXMPP {
 
     private void createConnection() throws SmackException, IOException, XMPPException {
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
-        configBuilder.setUsernameAndPassword(mConfiguration.getJid(), mConfiguration.getPassword());
         configBuilder.setDebuggerEnabled(Logging.ENABLED);
         configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         configBuilder.setResource(mConfiguration.getResource());

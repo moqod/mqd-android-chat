@@ -2,7 +2,8 @@ package com.moqod.android.chat.sample.chatroom.di;
 
 import com.moqod.android.chat.sample.app.AppComponent;
 import com.moqod.android.chat.sample.chatroom.ChatRoomFragment;
-import com.moqod.android.chat.sample.common.ActivityScope;
+import injection.ActivityScope;
+import com.moqod.android.chat.sample.common.injection.ErrorHandlerModule;
 import dagger.Component;
 
 /**
@@ -12,7 +13,7 @@ import dagger.Component;
  * Time: 12:06
  */
 @ActivityScope
-@Component(modules = {ChatRoomModule.class}, dependencies = AppComponent.class)
+@Component(modules = {ChatRoomModule.class, ErrorHandlerModule.class}, dependencies = AppComponent.class)
 public interface ChatRoomComponent {
 
     void inject(ChatRoomFragment fragment);

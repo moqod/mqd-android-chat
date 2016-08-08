@@ -11,6 +11,7 @@ buildscript {
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.fernandocejas.frodo'
 
 repositories {
     mavenCentral()
@@ -38,6 +39,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    defaultPublishConfig "debug"
 }
 
 dependencies {

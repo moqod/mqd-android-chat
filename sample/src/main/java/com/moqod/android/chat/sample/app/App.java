@@ -2,8 +2,10 @@ package com.moqod.android.chat.sample.app;
 
 import android.app.Application;
 import android.content.Context;
+import com.facebook.stetho.Stetho;
+import com.moqod.android.chat.Logging;
 import com.moqod.android.chat.di.modules.ApplicationModule;
-import com.moqod.android.chat.sample.common.HasComponent;
+import injection.HasComponent;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +20,13 @@ public class App extends Application implements HasComponent<AppComponent> {
     }
 
     private AppComponent mComponent;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Logging.ENABLED = true;
+        Stetho.initializeWithDefaults(this);
+    }
 
     @Override
     public AppComponent getComponent() {

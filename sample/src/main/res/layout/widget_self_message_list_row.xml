@@ -54,7 +54,6 @@
                 android:layout_marginTop="10dp"
                 android:lineSpacingExtra="5sp"
                 android:text="@{model.body}"
-                android:textColor="@color/white"
                 bind:visibility="@{model.hasBody ? View.VISIBLE : View.GONE}"
                 tools:text="Меня сложно найти, легко потерять и невозможно забыть." />
 
@@ -64,7 +63,6 @@
                 android:layout_gravity="right"
                 android:maxLines="1"
                 android:text="@{model.date}"
-                android:textColor="@color/black"
                 android:textSize="11sp"
                 tools:ignore="SmallSp"
                 tools:text="15:48" />

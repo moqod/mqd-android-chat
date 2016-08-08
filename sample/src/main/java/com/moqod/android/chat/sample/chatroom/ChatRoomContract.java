@@ -1,6 +1,8 @@
 package com.moqod.android.chat.sample.chatroom;
 
 
+import com.moqod.android.chat.sample.common.ChatViewModel;
+
 import java.util.List;
 
 /**

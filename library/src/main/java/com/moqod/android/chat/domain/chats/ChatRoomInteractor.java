@@ -11,6 +11,7 @@ import com.moqod.android.chat.domain.messages.models.MessageState;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func1;
+import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
@@ -32,7 +33,7 @@ public class ChatRoomInteractor {
     private PublishSubject<Object> mNotificationSubject = PublishSubject.create();
     private Subscription mSubscription;
 
-    private Subject<ChatModel, ChatModel> mInitSubject = new SerializedSubject<>(PublishSubject.create());
+    private Subject<ChatModel, ChatModel> mInitSubject = new SerializedSubject<>(BehaviorSubject.create());
 
     @Inject
     public ChatRoomInteractor(ChatsRepository localChatsRepository, MessagesRepository messagesRepository) {

@@ -70,7 +70,6 @@
                 android:layout_marginTop="4dp"
                 android:maxLines="1"
                 android:text="@{model.date}"
-                android:textColor="@color/black"
                 android:textSize="11sp"
                 tools:ignore="SmallSp"
                 tools:text="15:48" />

@@ -9,9 +9,5 @@ package com.moqod.android.chat.sample.chatroom;
 public interface ChatRoomRouter {
 
     void onCloseChatRoom();
-    void onUserProfileClicked(int userId);
-    void onVideoClicked(String uri);
-    void onEditChatClicked(int chatId);
-    void onChatClicked(int chatId);
 
 }

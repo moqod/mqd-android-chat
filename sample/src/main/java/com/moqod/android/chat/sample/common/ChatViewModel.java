@@ -1,6 +1,6 @@
-package com.moqod.android.chat.sample.chatroom;
+package com.moqod.android.chat.sample.common;
 
-import com.moqod.android.chat.sample.common.DateFormatter;
+import com.moqod.android.chat.sample.chatroom.MessageViewModel;
 import com.moqod.android.utils.BetterSortedList;
 
 import java.io.Serializable;

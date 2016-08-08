@@ -9,7 +9,8 @@ import android.view.View;
 import com.moqod.android.chat.sample.R;
 import com.moqod.android.chat.sample.chatroom.di.ChatRoomComponent;
 import com.moqod.android.chat.sample.common.BindingFragment;
-import com.moqod.android.chat.sample.common.Injector;
+import com.moqod.android.chat.sample.common.ChatViewModel;
+import injection.Injector;
 import com.moqod.android.chat.sample.databinding.FragmentChatRoomBinding;
 import com.moqod.android.utils.EndlessRecyclerViewScrollListener;
 

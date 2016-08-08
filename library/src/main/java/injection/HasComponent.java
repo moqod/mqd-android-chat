@@ -1,4 +1,4 @@
-package com.moqod.android.chat.sample.common;
+package injection;
 
 /**
  * Created with IntelliJ IDEA.

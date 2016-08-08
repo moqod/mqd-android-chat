@@ -1,8 +1,7 @@
 package com.moqod.android.chat.sample.chatroom.di;
 
 import com.moqod.android.chat.sample.chatroom.ChatRoomRouter;
-import com.moqod.android.chat.sample.common.ActivityScope;
-import com.moqod.android.chat.sample.common.ErrorHandler;
+import injection.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,12 +16,10 @@ public class ChatRoomModule {
 
     private ChatRoomRouter mRouter;
     private String mUserId;
-    private ErrorHandler mErrorHandler;
 
-    public ChatRoomModule(ChatRoomRouter router, String userId, ErrorHandler errorHandler) {
+    public ChatRoomModule(ChatRoomRouter router, String userId) {
         mRouter = router;
         mUserId = userId;
-        mErrorHandler = errorHandler;
     }
 
     @Provides
@@ -36,12 +33,6 @@ public class ChatRoomModule {
     @UserId
     public String provideUserId() {
         return mUserId;
-    }
-
-    @Provides
-    @ActivityScope
-    public ErrorHandler provideErrorHandler() {
-        return mErrorHandler;
     }
 
 }

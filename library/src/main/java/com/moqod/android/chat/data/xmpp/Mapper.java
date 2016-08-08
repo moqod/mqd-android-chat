@@ -62,8 +62,10 @@ class Mapper {
             messageInfoJson = null;
         }
 
+        String from = TextUtils.split(xmppMessage.getFrom(), "/")[0];
+
         MessageModel messageModel = new MessageModel(messageId, null, MessageState.STATE_NEW, messageTime,
-                xmppMessage.getFrom(), xmppMessage.getTo(), xmppMessage.getTo());
+                from, xmppMessage.getTo(), from);
         messageModel.setBody(xmppMessage.getBody());
 
         return messageModel;

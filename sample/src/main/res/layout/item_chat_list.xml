@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.moqod.android.chat.sample.common.ChatViewModel" />
+
+        <variable
+            name="eventListener"
+            type="com.moqod.android.chat.sample.chatlist.ChatListContract.EventListener" />
+    </data>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="@{() -> eventListener.onChatClicked(model)}"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:text="@{model.name}"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="Chat name" />
+
+</layout>

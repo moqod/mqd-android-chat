@@ -10,9 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import com.moqod.android.chat.Logging;
 import com.moqod.android.chat.XMPPConfiguration;
+import com.moqod.android.chat.di.ChatSingletonComponent;
 import com.moqod.android.chat.domain.messages.MessagesRepository;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.domain.messages.models.MessageState;
+import injection.Injector;
 import org.jivesoftware.smack.packet.Message;
 import rx.Observable;
 import rx.ObserverAdapter;
@@ -29,6 +31,8 @@ import javax.inject.Inject;
  * Time: 15:00
  */
 public class XMPPService extends Service {
+
+    private RxXMPP mXmpp;
 
     public static void run(Context context, XMPPConfiguration configuration) {
         Intent intent = new Intent(context, XMPPService.class);
@@ -51,16 +55,43 @@ public class XMPPService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        Injector.getComponent(getApplication(), ChatSingletonComponent.class).inject(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mStopReceiver, new IntentFilter(ACTION_STOP));
+    }
 
-        RxXMPP xmpp = new RxXMPP(null);
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        XMPPConfiguration config = intent.getParcelableExtra(KEY_XMPP_CONFIGURATION);
+        openXmppConnection(config);
 
-        Subscription subscription = xmpp.getNewMessages()
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mStopReceiver);
+        RxUtils.unsubscribe(this);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void openXmppConnection(XMPPConfiguration configuration) {
+        if (mXmpp != null) return;
+
+        mXmpp = new RxXMPP(configuration);
+
+        Subscription subscription = mXmpp.getNewMessages()
                 .flatMap(xmppMessage -> {
                     MessageModel messageModel = Mapper.map(xmppMessage);
 
                     if (messageModel != null) {
-                        return mMessagesRepository.put(messageModel);
+                        return mMessagesRepository.put(messageModel).onErrorResumeNext(Observable.empty());
                     } else {
                         return Observable.empty();
                     }
@@ -91,7 +122,7 @@ public class XMPPService extends Service {
                 .flatMap(messageModel -> {
                     Message message = Mapper.map(messageModel);
 
-                    return xmpp.sendMessage(message)
+                    return mXmpp.sendMessage(message)
                             .flatMap(xmppMessage -> {
                                 messageModel.setState(MessageState.STATE_SENT);
                                 return mMessagesRepository.put(messageModel);
@@ -104,25 +135,6 @@ public class XMPPService extends Service {
                 .subscribeOn(Schedulers.io())
                 .subscribe(ObserverAdapter.empty());
         RxUtils.manage(this, subscription);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mStopReceiver);
-        RxUtils.unsubscribe(this);
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     private final BroadcastReceiver mStopReceiver = new BroadcastReceiver() {

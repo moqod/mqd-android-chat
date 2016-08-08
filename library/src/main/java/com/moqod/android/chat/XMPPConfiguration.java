@@ -11,18 +11,18 @@ import android.os.Parcelable;
  */
 public class XMPPConfiguration implements Parcelable {
 
-    private String mResource;
-    private String mDomain;
     private String mHost;
     private int mPort;
+    private String mDomain;
+    private String mResource;
     private String mJid;
     private String mPassword;
 
-    public XMPPConfiguration(String resource, String domain, String host, int port, String jid, String password) {
-        mResource = resource;
-        mDomain = domain;
+    public XMPPConfiguration(String host, int port, String domain, String resource, String jid, String password) {
         mHost = host;
         mPort = port;
+        mDomain = domain;
+        mResource = resource;
         mJid = jid;
         mPassword = password;
     }

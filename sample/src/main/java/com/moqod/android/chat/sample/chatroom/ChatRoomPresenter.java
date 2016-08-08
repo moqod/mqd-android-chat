@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.moqod.android.chat.domain.chats.ChatRoomInteractor;
 import com.moqod.android.chat.sample.chatroom.di.UserId;
 import com.moqod.android.chat.sample.common.BasePresenter;
+import com.moqod.android.chat.sample.common.ChatViewModel;
 import com.moqod.android.chat.sample.common.ErrorHandler;
 import rx.ObserverAdapter;
 import rx.RxUtils;
@@ -54,13 +55,13 @@ public class ChatRoomPresenter implements BasePresenter<ChatRoomContract.View>, 
 
         if (mChatId != null) {
             Subscription subscription = mInteractor.initWithChatId(mChatId)
-                    .map(ChatMapper::map)
+                    .map(com.moqod.android.chat.sample.common.ChatMapper::map)
                     .compose(RxUtils.applySchedulers())
                     .subscribe(this::initCompleted, mErrorHandler::handleError);
             RxUtils.manage(this, subscription);
 
             subscription = mInteractor.getNewMessages(mChatId)
-                    .map(messageModels -> ChatMapper.map(messageModels, mCurrentUserId))
+                    .map(messageModels -> MessageMapper.map(messageModels, mCurrentUserId))
                     .compose(RxUtils.applySchedulers())
                     .delaySubscription(mInitializedSubject)
                     .subscribe(mView::updateMessagesUi, mErrorHandler::handleError);
@@ -101,7 +102,7 @@ public class ChatRoomPresenter implements BasePresenter<ChatRoomContract.View>, 
         }
 
         mCurrentPageSubscription = mInteractor.getMessages(mChatId, page * PAGE_QUANTITY, PAGE_QUANTITY)
-                .map(messageModels -> ChatMapper.map(messageModels, mCurrentUserId))
+                .map(messageModels -> MessageMapper.map(messageModels, mCurrentUserId))
                 .compose(RxUtils.applySchedulers())
                 .delaySubscription(mInitializedSubject)
                 .subscribe(mView::updateMessagesUi, mErrorHandler::handleError);

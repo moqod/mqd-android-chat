@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.moqod.android.chat.sample.chatroom.ChatViewModel" />
+            type="com.moqod.android.chat.sample.common.ChatViewModel" />
 
         <variable
             name="eventListener"

@@ -27,7 +27,7 @@ public class MessageDto {
     public String toUser;
     @StorIOSQLiteColumn(name = MessagesTable.COLUMN_DATE)
     public long dateTime;
-    @StorIOSQLiteColumn(name = MessagesTable.COLUMN_WEIGHT)
-    public transient int weight;
+    @StorIOSQLiteColumn(name = MessagesTable.COLUMN_WEIGHT, ignoreNull = true)
+    public Integer weight;
 
 }
