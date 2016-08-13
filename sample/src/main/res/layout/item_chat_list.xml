@@ -13,16 +13,45 @@
             type="com.moqod.android.chat.sample.chatlist.ChatListContract.EventListener" />
     </data>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_height="?android:attr/listPreferredItemHeightLarge"
         android:background="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="@{() -> eventListener.onChatClicked(model)}"
+        android:orientation="horizontal"
         android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:text="@{model.name}"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        tools:text="Chat name" />
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.name}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                tools:text="Chat name" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.lastMessage}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:text="Chat message" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{model.unreadMessagesCount}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="0" />
+
+    </LinearLayout>
 
 </layout>
