@@ -7,6 +7,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -98,6 +99,10 @@ public class RxXMPP {
     }
 
     private void createConnection() throws SmackException, IOException, XMPPException {
+        SASLAuthentication.unBlacklistSASLMechanism(SASLMechanism.PLAIN);
+        SASLAuthentication.blacklistSASLMechanism(SASLMechanism.DIGESTMD5);
+        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
         configBuilder.setDebuggerEnabled(Logging.ENABLED);
         configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
