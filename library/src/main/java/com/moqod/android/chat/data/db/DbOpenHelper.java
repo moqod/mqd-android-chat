@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     private static final int VERSION = 1;
-    public static final String DB_NAME = "database.db";
+    public static final String DB_NAME = "messages_database.db";
 
     @Inject
     public DbOpenHelper(Context context) {

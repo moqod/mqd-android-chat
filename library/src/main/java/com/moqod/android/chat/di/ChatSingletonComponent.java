@@ -28,7 +28,7 @@ public interface ChatSingletonComponent {
     Context context();
     MessagesRepository messagesRepository();
     ChatsRepository chatsRepository();
-    StorIOSQLite storIosqLite();
+    @Internal StorIOSQLite storIosqLite();
     LocalChatsRepository localChatsRepository();
     LocalMessagesRepository localMessagesRepository();
 

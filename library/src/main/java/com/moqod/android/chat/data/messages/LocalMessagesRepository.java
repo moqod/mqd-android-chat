@@ -1,6 +1,7 @@
 package com.moqod.android.chat.data.messages;
 
 import com.moqod.android.chat.data.common.QueryCriteria;
+import com.moqod.android.chat.di.Internal;
 import com.moqod.android.chat.domain.common.Criteria;
 import com.moqod.android.chat.domain.messages.MessagesRepository;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
@@ -24,7 +25,7 @@ public class LocalMessagesRepository implements MessagesRepository {
     private PublishSubject<MessageModel> mChangeNotificationSubject = PublishSubject.create();
 
     @Inject
-    public LocalMessagesRepository(StorIOSQLite db) {
+    public LocalMessagesRepository(@Internal StorIOSQLite db) {
         mDb = db;
     }
 

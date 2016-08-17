@@ -8,6 +8,7 @@ import com.moqod.android.chat.data.messages.dto.MessageDtoSQLiteTypeMapping;
 import com.moqod.android.chat.data.messages.resolvers.MessageDeleteResolver;
 import com.moqod.android.chat.data.messages.resolvers.MessageGetResolver;
 import com.moqod.android.chat.data.messages.resolvers.MessagePutResolver;
+import com.moqod.android.chat.di.Internal;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -28,6 +29,7 @@ public class DbModule {
 
     @Provides
     @Singleton
+    @Internal
     public StorIOSQLite provideStorIOSQLite(DbOpenHelper openHelper) {
         return DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(openHelper)

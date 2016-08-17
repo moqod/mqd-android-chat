@@ -2,6 +2,7 @@ package com.moqod.android.chat.data.chats;
 
 import com.moqod.android.chat.data.chats.dto.ChatDto;
 import com.moqod.android.chat.data.common.QueryCriteria;
+import com.moqod.android.chat.di.Internal;
 import com.moqod.android.chat.domain.chats.ChatsRepository;
 import com.moqod.android.chat.domain.chats.model.ChatModel;
 import com.moqod.android.chat.domain.common.Criteria;
@@ -23,7 +24,7 @@ public class LocalChatsRepository implements ChatsRepository {
     private StorIOSQLite mStorIO;
 
     @Inject
-    public LocalChatsRepository(StorIOSQLite storIO) {
+    public LocalChatsRepository(@Internal StorIOSQLite storIO) {
         mStorIO = storIO;
     }
 
