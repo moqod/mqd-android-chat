@@ -7,11 +7,11 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import rx.AsyncEmitter;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
@@ -20,6 +20,7 @@ import rx.subjects.Subject;
 import rx.subscriptions.Subscriptions;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,7 +30,7 @@ import java.io.IOException;
  */
 public class RxXMPP {
 
-    private static final String TAG = "xmpp_client";
+    private static final String TAG = "SMACK";
 
     private static final Integer CONNECTED = Integer.MAX_VALUE;
     private static final Integer DISCONNECTED = Integer.MIN_VALUE;
@@ -66,27 +67,40 @@ public class RxXMPP {
     }
 
     public Observable<Message> sendMessage(Message message) {
-        return Observable.fromCallable(() -> {
-            ensureConnection();
+        return Observable.<Message>fromAsync(asyncEmitter -> {
+            try {
+                ensureConnection();
 
-            if (mConnection != null && mConnection.isConnected() && mConnection.isAuthenticated()) {
-                Message.Type type = message.getType();
+                if (mConnection != null && mConnection.isConnected() && mConnection.isAuthenticated()) {
+                    Message.Type type = message.getType();
 
-                if (type == Message.Type.chat) {
-                    ChatManager chatManager = ChatManager.getInstanceFor(mConnection);
-                    chatManager.createChat(message.getTo()).sendMessage(message);
-                    return message;
-                } else if (type == Message.Type.groupchat) {
-                    MultiUserChatManager multiUserChatManager = MultiUserChatManager.getInstanceFor(mConnection);
-                    MultiUserChat multiUserChat = multiUserChatManager.getMultiUserChat(message.getTo());
-                    if (multiUserChat.isJoined()) {
-                        multiUserChat.sendMessage(message);
-                        return message;
+                    if (type == Message.Type.chat) {
+                        ChatManager chatManager = ChatManager.getInstanceFor(mConnection);
+                        mConnection.addStanzaIdAcknowledgedListener(message.getStanzaId(), packet -> {
+                            if (Logging.ENABLED) {
+                                Log.i(TAG, "processPacket: " + packet.toString());
+                            }
+                            asyncEmitter.onNext(message);
+                            asyncEmitter.onCompleted();
+                        });
+                        chatManager.createChat(message.getTo()).sendMessage(message);
+                    } else if (type == Message.Type.groupchat) {
+                        MultiUserChatManager multiUserChatManager = MultiUserChatManager.getInstanceFor(mConnection);
+                        MultiUserChat multiUserChat = multiUserChatManager.getMultiUserChat(message.getTo());
+                        if (multiUserChat.isJoined()) {
+                            multiUserChat.sendMessage(message);
+                        }
                     }
                 }
+            } catch (IOException | XMPPException | SmackException e) {
+                if (Logging.ENABLED) {
+                    e.printStackTrace();
+                }
+                asyncEmitter.onError(e);
             }
-            throw new SmackException.NotConnectedException();
-        }).delaySubscription(mAuthenticatedNotification);
+        }, AsyncEmitter.BackpressureMode.BUFFER)
+                .timeout(mConfiguration.getSendMessageTimeout(), TimeUnit.SECONDS)
+                .delaySubscription(mAuthenticatedNotification);
     }
 
     private synchronized void ensureConnection() throws IOException, XMPPException, SmackException {
@@ -99,10 +113,6 @@ public class RxXMPP {
     }
 
     private void createConnection() throws SmackException, IOException, XMPPException {
-        SASLAuthentication.unBlacklistSASLMechanism(SASLMechanism.PLAIN);
-        SASLAuthentication.blacklistSASLMechanism(SASLMechanism.DIGESTMD5);
-        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
         configBuilder.setDebuggerEnabled(Logging.ENABLED);
         configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
@@ -110,12 +120,12 @@ public class RxXMPP {
         configBuilder.setServiceName(mConfiguration.getDomain());
         configBuilder.setHost(mConfiguration.getHost());
         configBuilder.setPort(mConfiguration.getPort());
-        XMPPTCPConnection.setUseStreamManagementResumptionDefault(true);
+        XMPPTCPConnection.setUseStreamManagementResumptionDefault(false);
         XMPPTCPConnection.setUseStreamManagementDefault(true);
 
         mConnection = new XMPPTCPConnection(configBuilder.build());
         ReconnectionManager.setEnabledPerDefault(true);
-        ReconnectionManager.setDefaultFixedDelay(30);
+        ReconnectionManager.setDefaultFixedDelay(mConfiguration.getReconnectionDelay());
 
         mConnection.addConnectionListener(mConnectionListener);
     }

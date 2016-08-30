@@ -11,12 +11,17 @@ import android.os.Parcelable;
  */
 public class XMPPConfiguration implements Parcelable {
 
+    private static final int DEFAULT_RECONNECTION_DELAY = 30; // sec
+    private static final int DEFAULT_SEND_MESSAGE_TIMEOUT = 5; // sec
+
     private String mHost;
     private int mPort;
     private String mDomain;
     private String mResource;
     private String mJid;
     private String mPassword;
+    private int mReconnectionDelay = DEFAULT_RECONNECTION_DELAY;
+    private int mSendMessageTimeout = DEFAULT_SEND_MESSAGE_TIMEOUT;
 
     public XMPPConfiguration(String host, int port, String domain, String resource, String jid, String password) {
         mHost = host;
@@ -51,15 +56,33 @@ public class XMPPConfiguration implements Parcelable {
         return mPassword;
     }
 
+    public int getReconnectionDelay() {
+        return mReconnectionDelay;
+    }
+
+    public void setReconnectionDelay(int reconnectionDelay) {
+        mReconnectionDelay = reconnectionDelay;
+    }
+
+    public int getSendMessageTimeout() {
+        return mSendMessageTimeout;
+    }
+
+    public void setSendMessageTimeout(int sendMessageTimeout) {
+        mSendMessageTimeout = sendMessageTimeout;
+    }
+
     @Override
     public String toString() {
         return "XMPPConfiguration{" +
-                "mResource='" + mResource + '\'' +
-                ", mDomain='" + mDomain + '\'' +
-                ", mHost='" + mHost + '\'' +
+                "mHost='" + mHost + '\'' +
                 ", mPort=" + mPort +
+                ", mDomain='" + mDomain + '\'' +
+                ", mResource='" + mResource + '\'' +
                 ", mJid='" + mJid + '\'' +
                 ", mPassword='" + mPassword + '\'' +
+                ", mReconnectionDelay=" + mReconnectionDelay +
+                ", mSendMessageTimeout=" + mSendMessageTimeout +
                 '}';
     }
 
@@ -70,6 +93,8 @@ public class XMPPConfiguration implements Parcelable {
         mPort = in.readInt();
         mJid = in.readString();
         mPassword = in.readString();
+        mReconnectionDelay = in.readInt();
+        mSendMessageTimeout = in.readInt();
     }
 
     @Override
@@ -80,6 +105,8 @@ public class XMPPConfiguration implements Parcelable {
         dest.writeInt(mPort);
         dest.writeString(mJid);
         dest.writeString(mPassword);
+        dest.writeInt(mReconnectionDelay);
+        dest.writeInt(mSendMessageTimeout);
     }
 
     @Override
