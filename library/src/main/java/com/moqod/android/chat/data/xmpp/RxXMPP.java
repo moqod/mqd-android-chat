@@ -67,7 +67,7 @@ public class RxXMPP {
     }
 
     public Observable<Message> sendMessage(Message message) {
-        return Observable.<Message>fromAsync(asyncEmitter -> {
+        return Observable.<Message>fromEmitter(asyncEmitter -> {
             try {
                 ensureConnection();
 
