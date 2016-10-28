@@ -77,4 +77,8 @@ public class ChatsInteractor {
         return mChatsRepository.remove(chatModel);
     }
 
+    public Observable<Void> clear() {
+        return mChatsRepository.clear();
+    }
+
 }

@@ -15,5 +15,6 @@ public interface ChatsRepository {
     Observable<ChatModel> get(Criteria criteria);
     Observable<ChatModel> put(ChatModel chatModel);
     Observable<ChatModel> remove(ChatModel chatModel);
+    Observable<Void> clear();
 
 }

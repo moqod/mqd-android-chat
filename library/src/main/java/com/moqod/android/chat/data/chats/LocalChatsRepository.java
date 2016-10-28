@@ -2,11 +2,13 @@ package com.moqod.android.chat.data.chats;
 
 import com.moqod.android.chat.data.chats.dto.ChatDto;
 import com.moqod.android.chat.data.common.QueryCriteria;
+import com.moqod.android.chat.data.db.table.ChatTable;
 import com.moqod.android.chat.di.Internal;
 import com.moqod.android.chat.domain.chats.ChatsRepository;
 import com.moqod.android.chat.domain.chats.model.ChatModel;
 import com.moqod.android.chat.domain.common.Criteria;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import rx.Observable;
 
 import javax.inject.Inject;
@@ -68,6 +70,15 @@ public class LocalChatsRepository implements ChatsRepository {
                             .asRxObservable()
                             .map(putResult -> chatModel);
                 });
+    }
+
+    @Override
+    public Observable<Void> clear() {
+        return mStorIO.delete()
+                .byQuery(DeleteQuery.builder().table(ChatTable.TABLE).build())
+                .prepare()
+                .asRxObservable()
+                .map(deleteResult -> null);
     }
 
 }
