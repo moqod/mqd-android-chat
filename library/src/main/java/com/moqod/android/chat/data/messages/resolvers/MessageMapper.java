@@ -24,6 +24,7 @@ class MessageMapper {
         dto.state = model.getState();
         dto.fromUser = model.getFromUser();
         dto.toUser = model.getToUser();
+        dto.offline = model.isOffline();
 
         return dto;
     }
