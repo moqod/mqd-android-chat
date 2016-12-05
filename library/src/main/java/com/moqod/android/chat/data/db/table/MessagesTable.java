@@ -18,6 +18,7 @@ public class MessagesTable {
     public static final String COLUMN_TO_USER = "to_user";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_WEIGHT = "weight";
+    public static final String COLUMN_OFFLINE = "offline";
 
     public static String getCreateStatement() {
         return "CREATE TABLE " + TABLE + " (" +
@@ -28,6 +29,7 @@ public class MessagesTable {
                 COLUMN_FROM_USER + " TEXT NOT NULL, " +
                 COLUMN_TO_USER + " TEXT NOT NULL, " +
                 COLUMN_DATE + " INTEGER, " +
+                COLUMN_OFFLINE + " INTEGER, " +
                 COLUMN_WEIGHT + " INTEGER PRIMARY KEY AUTOINCREMENT" +
                 ");";
     }

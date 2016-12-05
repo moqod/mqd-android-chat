@@ -19,7 +19,8 @@ import javax.inject.Singleton;
 @Singleton
 public class DbOpenHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 1;
+    // // TODO: 05/12/2016 move version to class with tables definition
+    private static final int VERSION = 2;
     public static final String DB_NAME = "messages_database.db";
 
     @Inject
@@ -36,6 +37,10 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // TODO: 05/12/2016 move to table definition
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("ALTER TABLE " + MessagesTable.TABLE + " ADD COLUMN " + MessagesTable.COLUMN_OFFLINE + " INTEGER DEFAULT 0");
+        }
     }
 
 }

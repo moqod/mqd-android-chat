@@ -25,6 +25,20 @@ public class MessageModel extends BaseModel {
     private String mBody;
     private String mChatId;
     private BaseMessageAttach mAttach;
+    private boolean mOffline;
+
+    public MessageModel(String id, Integer weight, @MessageState.State int state, Date date,
+                        @NonNull String fromUser, @NonNull String toUser, String chatId, boolean offline) {
+        super();
+        mId = id;
+        mWeight = weight;
+        mState = state;
+        mDate = date;
+        mFromUser = fromUser;
+        mToUser = toUser;
+        mChatId = chatId;
+        mOffline = offline;
+    }
 
     public MessageModel(String id, Integer weight, @MessageState.State int state, Date date,
                         @NonNull String fromUser, @NonNull String toUser, String chatId) {
@@ -96,6 +110,10 @@ public class MessageModel extends BaseModel {
 
     public String getChatId() {
         return mChatId;
+    }
+
+    public boolean isOffline() {
+        return mOffline;
     }
 
     @Override

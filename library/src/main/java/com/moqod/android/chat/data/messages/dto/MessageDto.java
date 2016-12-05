@@ -29,5 +29,6 @@ public class MessageDto {
     public long dateTime;
     @StorIOSQLiteColumn(name = MessagesTable.COLUMN_WEIGHT, ignoreNull = true)
     public Integer weight;
-
+    @StorIOSQLiteColumn(name = MessagesTable.COLUMN_WEIGHT)
+    public Boolean offline;
 }

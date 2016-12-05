@@ -62,10 +62,12 @@ class Mapper {
             messageInfoJson = null;
         }
 
+        DelayInformation delayInformation = DelayInformation.from(xmppMessage);
+
         String from = TextUtils.split(xmppMessage.getFrom(), "/")[0];
 
         MessageModel messageModel = new MessageModel(messageId, null, MessageState.STATE_NEW, messageTime,
-                from, xmppMessage.getTo(), from);
+                from, xmppMessage.getTo(), from, delayInformation != null);
         messageModel.setBody(xmppMessage.getBody());
 
         return messageModel;

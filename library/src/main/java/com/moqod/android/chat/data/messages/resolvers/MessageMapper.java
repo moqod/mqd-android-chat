@@ -30,7 +30,7 @@ class MessageMapper {
 
     @NonNull
     static MessageModel map(MessageDto dto) {
-        MessageModel model = new MessageModel(dto.id, dto.weight, dto.state, new Date(dto.dateTime), dto.fromUser, dto.toUser, dto.chatId);
+        MessageModel model = new MessageModel(dto.id, dto.weight, dto.state, new Date(dto.dateTime), dto.fromUser, dto.toUser, dto.chatId, dto.offline);
         model.setBody(dto.body);
         return model;
     }
