@@ -21,7 +21,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     // // TODO: 05/12/2016 move version to class with tables definition
     private static final int VERSION = 2;
-    public static final String DB_NAME = "messages_database.db";
+    private static final String DB_NAME = "messages_database.db";
 
     @Inject
     public DbOpenHelper(Context context) {

@@ -14,7 +14,7 @@ public class ChatTable {
     public static final String COLUMN_NAME = "name";
 
     public static String getCreateStatement() {
-        return "CREATE TABLE " + TABLE + " (" +
+        return "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                 COLUMN_JID + " TEXT NOT NULL PRIMARY KEY, " +
                 COLUMN_NAME + " TEXT" +
                 ");";

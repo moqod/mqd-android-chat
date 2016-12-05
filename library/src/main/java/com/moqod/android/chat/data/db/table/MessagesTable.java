@@ -21,7 +21,7 @@ public class MessagesTable {
     public static final String COLUMN_OFFLINE = "offline";
 
     public static String getCreateStatement() {
-        return "CREATE TABLE " + TABLE + " (" +
+        return "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                 COLUMN_CHAT_ID + " INTEGER NOT NULL, " +
                 COLUMN_ID + " TEXT NOT NULL, " +
                 COLUMN_BODY + " TEXT, " +

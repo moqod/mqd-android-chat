@@ -17,7 +17,7 @@ public class ImageTable {
     public static final String COLUMN_LOCAL = "local";
 
     public static String getCreateStatement() {
-        return "CREATE TABLE " + TABLE + " (" +
+        return "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                 COLUMN_KEY + " TEXT, " +
                 COLUMN_PHOTO_ID + " INTEGER, " +
                 COLUMN_DENSITY + " INTEGER, " +
