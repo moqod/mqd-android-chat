@@ -7,6 +7,7 @@ import com.moqod.android.chat.utils.NullHelper;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -68,7 +69,7 @@ public class MessageModel extends BaseModel {
     @NonNull
     public Date getDate() {
         if (mDate == null) {
-            mDate = Calendar.getInstance().getTime();
+            mDate = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
         }
         return mDate;
     }
