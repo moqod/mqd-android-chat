@@ -6,6 +6,8 @@ import com.moqod.android.chat.domain.common.BaseModel;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.utils.NullHelper;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sergey Chuvashev
@@ -16,7 +18,7 @@ public class ChatModel extends BaseModel {
 
     private String mJid;
     private String mName;
-    private int mUnreadMessages;
+    private List<MessageModel> mUnreadMessages;
     private MessageModel mLastMessage;
 
     public ChatModel(@NonNull String jid, String name) {
@@ -34,11 +36,11 @@ public class ChatModel extends BaseModel {
         return NullHelper.nonNull(mName);
     }
 
-    public int getUnreadMessages() {
+    public List<MessageModel>  getUnreadMessages() {
         return mUnreadMessages;
     }
 
-    public void setUnreadMessages(int unreadMessages) {
+    public void setUnreadMessages(List<MessageModel>  unreadMessages) {
         mUnreadMessages = unreadMessages;
     }
 

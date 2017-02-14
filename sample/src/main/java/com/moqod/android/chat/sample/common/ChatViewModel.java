@@ -1,9 +1,11 @@
 package com.moqod.android.chat.sample.common;
 
+import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.sample.chatroom.MessageViewModel;
 import com.moqod.android.utils.BetterSortedList;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +17,10 @@ public class ChatViewModel implements Serializable, BetterSortedList.SortedEntit
 
     private String mId;
     private String mName;
-    private int mUnreadMessagesCount;
+    private List<MessageModel>  mUnreadMessagesCount;
     private MessageViewModel mLastMessage;
 
-    public ChatViewModel(String id, String name, int unreadMessagesCount) {
+    public ChatViewModel(String id, String name, List<MessageModel> unreadMessagesCount) {
         mId = id;
         mName = name;
         mUnreadMessagesCount = unreadMessagesCount;
@@ -41,10 +43,10 @@ public class ChatViewModel implements Serializable, BetterSortedList.SortedEntit
     }
 
     public boolean isHasUnreadMessages() {
-        return mUnreadMessagesCount != 0;
+        return mUnreadMessagesCount.size() != 0;
     }
 
-    public int getUnreadMessagesCountRaw() {
+    public List<MessageModel>  getUnreadMessagesCountRaw() {
         return mUnreadMessagesCount;
     }
 

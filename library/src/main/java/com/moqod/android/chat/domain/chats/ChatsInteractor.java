@@ -51,7 +51,7 @@ public class ChatsInteractor {
                 })
                 .flatMap(chatModel -> mMessagesRepository.get(MessageStateCriteria.create(chatModel.getJid(), MessageState.STATE_NEW))
                         .map(messageModels -> {
-                            chatModel.setUnreadMessages(messageModels.size());
+                            chatModel.setUnreadMessages(messageModels);
                             return chatModel;
                         })
                         .defaultIfEmpty(chatModel)

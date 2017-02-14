@@ -69,7 +69,7 @@ public class MessageModel extends BaseModel {
     @NonNull
     public Date getDate() {
         if (mDate == null) {
-            mDate = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+            mDate = Calendar.getInstance().getTime();
         }
         return mDate;
     }
