@@ -30,7 +30,6 @@ public class MessagePutResolver extends PutResolver<MessageModel> {
     @Override
     public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull MessageModel object) {
         ArrayList<Object> objects = new ArrayList<>();
-
         MessageDto dto = MessageMapper.map(object);
         objects.add(dto);
 
