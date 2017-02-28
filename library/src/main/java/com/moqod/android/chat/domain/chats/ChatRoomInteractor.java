@@ -1,6 +1,7 @@
 package com.moqod.android.chat.domain.chats;
 
 import android.support.annotation.NonNull;
+
 import com.moqod.android.chat.data.chats.criteria.ChatByIdCriteria;
 import com.moqod.android.chat.data.messages.critearia.MessageStateCriteria;
 import com.moqod.android.chat.data.messages.critearia.MessagesOffsetCriteria;
@@ -8,6 +9,7 @@ import com.moqod.android.chat.domain.chats.model.ChatModel;
 import com.moqod.android.chat.domain.messages.MessagesRepository;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.domain.messages.models.MessageState;
+
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func1;
@@ -17,6 +19,7 @@ import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
 import javax.inject.Inject;
+
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ import java.util.List;
  * Time: 17:01
  */
 public class ChatRoomInteractor {
-
+    private String mTmpChatId;
     private ChatsRepository mLocalChatsRepository;
     private MessagesRepository mMessagesRepository;
 
@@ -55,6 +58,7 @@ public class ChatRoomInteractor {
     }
 
     public Observable<List<MessageModel>> getNewMessages(String chatId) {
+        mTmpChatId = chatId;
         return mMessagesRepository.get(MessageStateCriteria.create(chatId, MessageState.STATE_NEW,
                 MessageState.STATE_ERROR, MessageState.STATE_OUTGOING, MessageState.STATE_SENDING, MessageState.STATE_PREPARE))
                 .doOnSubscribe(() -> {
@@ -69,7 +73,12 @@ public class ChatRoomInteractor {
                                         state == MessageState.STATE_PREPARE
                                 );
                             })
-                            .subscribe(messageModel -> mNotificationSubject.onNext(messageModel));
+                            .subscribe(messageModel -> {
+                                if (messageModel.getBody().contains("TYPING") && !messageModel.getFromUser().equals(chatId)) {
+                                    return;
+                                }
+                                mNotificationSubject.onNext(messageModel);
+                            });
                 })
                 .flatMap(markAsRead())
                 .repeatWhen(observable -> observable.flatMap(o -> mNotificationSubject.take(1)))
