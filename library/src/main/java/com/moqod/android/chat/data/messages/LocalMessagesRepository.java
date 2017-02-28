@@ -53,8 +53,10 @@ public class LocalMessagesRepository implements MessagesRepository {
 
     @Override
     public Observable<MessageModel> put(MessageModel message) {
-        if (message.getBody().contains("TYPING"))
-            return Observable.empty();
+        if (message.getBody().contains("TYPING")) {
+            return Observable.just(message)
+                    .doOnNext(messageModel -> mChangeNotificationSubject.onNext(message));
+        }
         return mDb.put()
                 .object(message)
                 .prepare()
