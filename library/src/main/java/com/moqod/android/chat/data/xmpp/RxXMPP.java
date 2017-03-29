@@ -1,19 +1,23 @@
 package com.moqod.android.chat.data.xmpp;
 
 import android.util.Log;
+
 import com.moqod.android.chat.Logging;
 import com.moqod.android.chat.XMPPConfiguration;
+
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+
 import rx.AsyncEmitter;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -23,6 +27,7 @@ import rx.subjects.Subject;
 import rx.subscriptions.Subscriptions;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,22 +39,27 @@ import java.util.concurrent.TimeUnit;
 public class RxXMPP {
 
     private static final String TAG = "SMACK";
-    private RosterListener mRosterListener;
+
     private static final Integer CONNECTED = Integer.MAX_VALUE;
     private static final Integer DISCONNECTED = Integer.MIN_VALUE;
 
     private final XMPPConfiguration mConfiguration;
 
     private XMPPTCPConnection mConnection;
-
+    private XMPPConnection mXMPPConnection;
     private BehaviorSubject<Integer> mAuthenticatedSubject = BehaviorSubject.create();
     private Observable<Integer> mAuthenticatedNotification;
 
     private Subject<Message, Message> mMessagesSubject = new SerializedSubject<>(PublishSubject.create());
+    private RosterListener mRosterListener;
 
-    public RxXMPP(XMPPConfiguration configuration,RosterListener rosterListener) {
+    public XMPPConnection getXMPPConnection() {
+        return mXMPPConnection;
+    }
+
+    public RxXMPP(XMPPConfiguration configuration, RosterListener listener) {
         mConfiguration = configuration;
-        mRosterListener=rosterListener;
+        mRosterListener = listener;
         mAuthenticatedNotification = mAuthenticatedSubject.filter(state -> state == CONNECTED);
     }
 
@@ -73,7 +83,6 @@ public class RxXMPP {
         return Observable.<Message>fromEmitter(asyncEmitter -> {
             try {
                 ensureConnection();
-
                 if (mConnection != null && mConnection.isConnected() && mConnection.isAuthenticated()) {
                     Message.Type type = message.getType();
 
@@ -148,12 +157,14 @@ public class RxXMPP {
 
         @Override
         public void connected(final XMPPConnection connection) {
+            mXMPPConnection = connection;
             if (Logging.ENABLED) {
                 Log.d(TAG, "Connected!");
             }
             if (!connection.isAuthenticated()) {
                 try {
                     mConnection.login(mConfiguration.getJid(), mConfiguration.getPassword());
+
                 } catch (XMPPException | SmackException | IOException e) {
                     e.printStackTrace();
                 }
@@ -170,7 +181,6 @@ public class RxXMPP {
                     presence.setPriority(24);
                     presence.setMode(Presence.Mode.available);
                     roster = Roster.getInstanceFor(connection);
-
                     roster.addRosterListener(mRosterListener);
                     connection.sendStanza(presence);
 
@@ -224,6 +234,7 @@ public class RxXMPP {
             if (Logging.ENABLED) {
                 Log.d(TAG, "Authenticated!");
             }
+
             mAuthenticatedSubject.onNext(CONNECTED);
         }
     };

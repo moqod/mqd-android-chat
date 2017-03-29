@@ -8,15 +8,20 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+
 import com.moqod.android.chat.Logging;
 import com.moqod.android.chat.XMPPConfiguration;
 import com.moqod.android.chat.di.ChatSingletonComponent;
 import com.moqod.android.chat.domain.messages.MessagesRepository;
 import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.domain.messages.models.MessageState;
+
 import injection.Injector;
+
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.Collection;
@@ -35,7 +40,7 @@ import javax.inject.Inject;
  * Date: 23/05/16
  * Time: 15:00
  */
-public class XMPPService extends Service implements RosterListener{
+public class XMPPService extends Service implements RosterListener {
 
     private RxXMPP mXmpp;
 
@@ -80,6 +85,10 @@ public class XMPPService extends Service implements RosterListener{
         RxUtils.unsubscribe(this);
     }
 
+    protected Roster getConnection() {
+        return Roster.getInstanceFor(mXmpp.getXMPPConnection());
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -89,7 +98,7 @@ public class XMPPService extends Service implements RosterListener{
     private void openXmppConnection(XMPPConfiguration configuration) {
         if (mXmpp != null) return;
 
-        mXmpp = new RxXMPP(configuration,this);
+        mXmpp = new RxXMPP(configuration, this);
 
         Subscription subscription = mXmpp.getNewMessages()
                 .flatMap(xmppMessage -> {
