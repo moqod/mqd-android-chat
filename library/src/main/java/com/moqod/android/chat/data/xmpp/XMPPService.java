@@ -16,6 +16,11 @@ import com.moqod.android.chat.domain.messages.models.MessageModel;
 import com.moqod.android.chat.domain.messages.models.MessageState;
 import injection.Injector;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.RosterListener;
+
+import java.util.Collection;
+
 import rx.Observable;
 import rx.ObserverAdapter;
 import rx.RxUtils;
@@ -30,7 +35,7 @@ import javax.inject.Inject;
  * Date: 23/05/16
  * Time: 15:00
  */
-public class XMPPService extends Service {
+public class XMPPService extends Service implements RosterListener{
 
     private RxXMPP mXmpp;
 
@@ -84,7 +89,7 @@ public class XMPPService extends Service {
     private void openXmppConnection(XMPPConfiguration configuration) {
         if (mXmpp != null) return;
 
-        mXmpp = new RxXMPP(configuration);
+        mXmpp = new RxXMPP(configuration,this);
 
         Subscription subscription = mXmpp.getNewMessages()
                 .flatMap(xmppMessage -> {
@@ -144,4 +149,23 @@ public class XMPPService extends Service {
         }
     };
 
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void presenceChanged(Presence presence) {
+
+    }
 }

@@ -7,6 +7,9 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class RxXMPP {
 
     private static final String TAG = "SMACK";
-
+    private RosterListener mRosterListener;
     private static final Integer CONNECTED = Integer.MAX_VALUE;
     private static final Integer DISCONNECTED = Integer.MIN_VALUE;
 
@@ -44,9 +47,9 @@ public class RxXMPP {
 
     private Subject<Message, Message> mMessagesSubject = new SerializedSubject<>(PublishSubject.create());
 
-    public RxXMPP(XMPPConfiguration configuration) {
+    public RxXMPP(XMPPConfiguration configuration,RosterListener rosterListener) {
         mConfiguration = configuration;
-
+        mRosterListener=rosterListener;
         mAuthenticatedNotification = mAuthenticatedSubject.filter(state -> state == CONNECTED);
     }
 
@@ -155,6 +158,29 @@ public class RxXMPP {
                     e.printStackTrace();
                 }
             }
+            Roster roster = Roster.getInstanceFor(mConnection);
+            if (!roster.isLoaded())
+                try {
+                    roster.reloadAndWait();
+                    roster.createEntry(mConfiguration.getJid(), connection.getUser(), null);
+                    roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+
+                    Presence presence = new Presence(Presence.Type.available);
+                    presence.setStatus("Online");
+                    presence.setPriority(24);
+                    presence.setMode(Presence.Mode.available);
+                    roster = Roster.getInstanceFor(connection);
+
+                    roster.addRosterListener(mRosterListener);
+                    connection.sendStanza(presence);
+
+                } catch (SmackException.NotLoggedInException
+                        | SmackException.NotConnectedException
+                        | InterruptedException
+                        | XMPPException.XMPPErrorException
+                        | SmackException.NoResponseException e) {
+                    e.printStackTrace();
+                }
         }
 
         @Override
